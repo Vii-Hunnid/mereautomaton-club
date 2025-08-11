@@ -2,9 +2,11 @@
 <script>
   import '../app.css'
   import { page } from '$app/stores'
-  import { PUBLIC_DOMAIN } from '$env/static/public'
   
-  $: isSubdomain = $page.url.host !== PUBLIC_DOMAIN && $page.url.host !== `www.${PUBLIC_DOMAIN}`
+  $: isSubdomain = typeof window !== 'undefined' && 
+    $page.url.host !== 'mereautomaton.club' && 
+    $page.url.host !== 'www.mereautomaton.club' &&
+    !$page.url.host.includes('localhost')
 </script>
 
 <svelte:head>
@@ -94,18 +96,3 @@
     </footer>
   {/if}
 </div>
-
-
-
-<!-- <script lang="ts">
-	import '../app.css';
-	import favicon from '$lib/assets/favicon.svg';
-	
-	let { children } = $props();
-</script>
-
-<svelte:head>
-	<link rel="icon" href={favicon} />
-</svelte:head>
-
-{@render children?.()} -->

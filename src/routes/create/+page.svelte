@@ -5,7 +5,6 @@
   import { goto } from '$app/navigation'
   import { generatePoem, generateSlug } from '$lib/utils/ai.js'
   import { createPoem, createSubdomain, checkSubdomainExists } from '$lib/utils/supabase.js'
-  import { PUBLIC_DOMAIN } from '$env/static/public'
   
   let title = ''
   let slug = ''
@@ -91,7 +90,7 @@
         const protocol = window.location.protocol
         const domain = window.location.hostname.includes('localhost') 
           ? `localhost:${window.location.port}`
-          : PUBLIC_DOMAIN
+          : 'mereautomaton.club'
         window.location.href = `${protocol}//${slug}.${domain}`
       }, 2000)
       
@@ -113,10 +112,10 @@
       const protocol = window.location.protocol
       const domain = window.location.hostname.includes('localhost') 
         ? `localhost:${window.location.port}`
-        : PUBLIC_DOMAIN
+        : 'mereautomaton.club'
       return `${protocol}//${slug}.${domain}`
     }
-    return `https://${slug}.${PUBLIC_DOMAIN}`
+    return `https://${slug}.mereautomaton.club`
   }
 </script>
 
