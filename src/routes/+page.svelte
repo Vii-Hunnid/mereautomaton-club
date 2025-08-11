@@ -193,9 +193,10 @@
           >
             Create the First Poem
           </button>
+          </div>
         </div>
-      </div>
-    {/if}
+      {/if}
+    </div>
   </div>
 </section>
 
@@ -231,7 +232,6 @@
     </div>
   </div>
 </section>
-
 
 
 
