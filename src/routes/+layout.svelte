@@ -8,13 +8,7 @@
 </script>
 
 <svelte:head>
-  <title>
-    {#if isSubdomain}
-      {$page.params.subdomain || 'Poem'} - MereAutomaton.club
-    {:else}
-      MereAutomaton.club - AI Poetry Platform
-    {/if}
-  </title>
+  <title>{isSubdomain ? ($page.params.subdomain || 'Poem') + ' - MereAutomaton.club' : 'MereAutomaton.club - AI Poetry Platform'}</title>
   <meta name="description" content="Create and discover beautiful AI-generated poetry" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 </svelte:head>
@@ -100,6 +94,7 @@
     </footer>
   {/if}
 </div>
+
 
 
 <!-- <script lang="ts">
