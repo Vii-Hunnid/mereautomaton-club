@@ -15,6 +15,10 @@
 		"test:e2e": "playwright test",
 		"test": "npm run test:e2e"
 	},
+	"dependencies": {
+		"@supabase/supabase-js": "^2.38.4",
+		"lucide-svelte": "^0.294.0"
+	},
 	"devDependencies": {
 		"@eslint/compat": "^1.2.5",
 		"@eslint/js": "^9.18.0",
