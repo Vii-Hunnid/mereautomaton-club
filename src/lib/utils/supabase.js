@@ -1,13 +1,21 @@
 // src/lib/utils/supabase.js
 import { createClient } from '@supabase/supabase-js'
 import { browser } from '$app/environment'
-import { env as publicEnv } from '$env/dynamic/public'
 
-// Resolve env in both server and browser
-const supabaseUrl =
-  publicEnv.PUBLIC_SUPABASE_URL || (typeof import !== 'undefined' && import.meta?.env?.VITE_PUBLIC_SUPABASE_URL) || 'https://placeholder.supabase.co'
-const supabaseAnonKey =
-  publicEnv.PUBLIC_SUPABASE_ANON_KEY || (typeof import !== 'undefined' && import.meta?.env?.VITE_PUBLIC_SUPABASE_ANON_KEY) || 'placeholder-key'
+// Use fallback values during build/development
+let supabaseUrl = 'https://placeholder.supabase.co'
+let supabaseAnonKey = 'placeholder-key'
+
+// Try to import environment variables, but handle gracefully if they don't exist
+try {
+  if (browser) {
+    // In browser, we can safely access these
+    supabaseUrl = import.meta.env.VITE_PUBLIC_SUPABASE_URL || supabaseUrl
+    supabaseAnonKey = import.meta.env.VITE_PUBLIC_SUPABASE_ANON_KEY || supabaseAnonKey
+  }
+} catch (error) {
+  console.warn('Environment variables not available, using placeholders')
+}
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
@@ -17,6 +25,7 @@ export async function getAllPoems() {
     const { data, error } = await supabase
       .from('poems')
       .select('*')
+      .eq('is_public', true)
       .order('created_at', { ascending: false })
     
     if (error) {
