@@ -16,8 +16,16 @@ export async function handle({ event, resolve }) {
     event.locals.subdomain = sub
 
     if (url.pathname === '/' || url.pathname === '') {
-      throw redirect(307, `/${sub}`) // real redirect
+      throw redirect(307, `/${sub}`)
     }
+    
+    // NEW: Handle redundant paths like entitled.mereautomaton.club/entitled
+    const pathSegments = url.pathname.split('/').filter(Boolean)
+    if (pathSegments.length === 1 && pathSegments[0] === sub) {
+      // Redirect entitled.mereautomaton.club/entitled -> entitled.mereautomaton.club/
+      throw redirect(301, '/')
+    }
+    
   } else {
     event.locals.isSubdomain = false
     event.locals.subdomain = null
@@ -25,6 +33,38 @@ export async function handle({ event, resolve }) {
 
   return resolve(event)
 }
+
+
+
+
+
+// // src/hooks.server.js
+// import { redirect } from '@sveltejs/kit'
+
+// export async function handle({ event, resolve }) {
+//   const host = event.request.headers.get('host') || ''
+//   const url = new URL(event.request.url)
+
+//   const isMain = host === 'mereautomaton.club' || host === 'www.mereautomaton.club'
+//   const isLocal = host.includes('localhost')
+//   const isVercel = host.includes('vercel.app')
+//   const isSub = host.includes('.') && !isMain && !isLocal && !isVercel
+
+//   if (isSub) {
+//     const sub = host.split('.')[0]
+//     event.locals.isSubdomain = true
+//     event.locals.subdomain = sub
+
+//     if (url.pathname === '/' || url.pathname === '') {
+//       throw redirect(307, `/${sub}`) // real redirect
+//     }
+//   } else {
+//     event.locals.isSubdomain = false
+//     event.locals.subdomain = null
+//   }
+
+//   return resolve(event)
+// }
 
 
 
