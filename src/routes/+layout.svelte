@@ -29,12 +29,12 @@
         
         {#if !isSubdomain}
           <div class="flex items-center space-x-4">
-            <a href="/create" class="text-gray-600 hover:text-purple-600 transition-colors">
+            <a href="/poems" class="text-gray-600 hover:text-purple-600 transition-colors">
+              All Poems
+            </a>
+            <a href="/create" class="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors">
               Create Poem
             </a>
-            <button class="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors">
-              Sign Up
-            </button>
           </div>
         {:else}
           <div class="flex items-center space-x-4">

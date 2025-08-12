@@ -3,7 +3,7 @@
   import { onMount } from 'svelte'
   import { page } from '$app/stores'
   import { goto } from '$app/navigation'
-  import { generatePoem, generateSlug } from '$lib/utils/ai.js'
+  import { generatePoemPreferAI as generatePoem, generateSlug } from '$lib/utils/ai.js'
   import { createPoem, createSubdomain, checkSubdomainExists } from '$lib/utils/supabase.js'
   
   let title = ''

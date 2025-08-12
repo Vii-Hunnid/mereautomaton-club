@@ -40,6 +40,9 @@ const poemTemplates = {
   }
 }
 
+/**
+ * @param {string} title
+ */
 export function generateSlug(title) {
   return title
     .toLowerCase()
@@ -49,16 +52,29 @@ export function generateSlug(title) {
     .trim()
 }
 
+/**
+ * @param {string} title
+ */
 export function extractThemeFromTitle(title) {
   const lowerTitle = title.toLowerCase()
   
-  if (lowerTitle.includes('love') || lowerTitle.includes('heart') || lowerTitle.includes('romance')) {
+  if (lowerTitle.indexOf('love') !== -1 || lowerTitle.indexOf('heart') !== -1 || lowerTitle.indexOf('romance') !== -1) {
     return 'love'
   }
-  if (lowerTitle.includes('nature') || lowerTitle.includes('forest') || lowerTitle.includes('ocean') || lowerTitle.includes('mountain')) {
+  if (
+    lowerTitle.indexOf('nature') !== -1 ||
+    lowerTitle.indexOf('forest') !== -1 ||
+    lowerTitle.indexOf('ocean') !== -1 ||
+    lowerTitle.indexOf('mountain') !== -1
+  ) {
     return 'nature'
   }
-  if (lowerTitle.includes('tech') || lowerTitle.includes('digital') || lowerTitle.includes('ai') || lowerTitle.includes('computer')) {
+  if (
+    lowerTitle.indexOf('tech') !== -1 ||
+    lowerTitle.indexOf('digital') !== -1 ||
+    lowerTitle.indexOf('ai') !== -1 ||
+    lowerTitle.indexOf('computer') !== -1
+  ) {
     return 'technology'
   }
   
@@ -66,6 +82,9 @@ export function extractThemeFromTitle(title) {
   return 'nature'
 }
 
+/**
+ * @param {string} title
+ */
 export function selectPoemStyle(title) {
   const wordCount = title.split(' ').length
   
@@ -73,6 +92,9 @@ export function selectPoemStyle(title) {
   return wordCount <= 3 ? 'haiku' : 'freeVerse'
 }
 
+/**
+ * @param {string} title
+ */
 export async function generatePoem(title) {
   try {
     // Extract theme and style from title
@@ -83,8 +105,7 @@ export async function generatePoem(title) {
     const poems = poemTemplates[style]?.[theme] || poemTemplates.haiku.nature
     const randomPoem = poems[Math.floor(Math.random() * poems.length)]
     
-    // Simulate AI generation delay
-    await new Promise(resolve => setTimeout(resolve, 1500))
+    // No artificial delay in production
     
     return {
       content: randomPoem,
@@ -98,6 +119,9 @@ export async function generatePoem(title) {
 }
 
 // For production with real AI API (OpenAI example)
+/**
+ * @param {string} title
+ */
 export async function generatePoemWithAI(title) {
   try {
     const response = await fetch('/api/generate-poem', {
@@ -116,7 +140,19 @@ export async function generatePoemWithAI(title) {
     return data
   } catch (error) {
     console.error('Error generating poem with AI:', error)
-    // Fallback to template-based generation
-    return generatePoem(title)
+    // No fallback to templates; propagate error
+    throw error
+  }
+}
+
+/**
+ * Prefer server-side OpenAI endpoint; fallback to local templates
+ * @param {string} title
+ */
+export async function generatePoemPreferAI(title) {
+  try {
+    return await generatePoemWithAI(title)
+  } catch (err) {
+    throw err
   }
 }

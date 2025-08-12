@@ -99,133 +99,31 @@
   </div>
 </section>
 
-<!-- Stats Section -->
-<section class="py-16 bg-white">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-      <div>
-        <div class="text-4xl font-bold text-purple-600 mb-2">{poems.length}</div>
-        <div class="text-gray-600">Poems Created</div>
-      </div>
-      <div>
-        <div class="text-4xl font-bold text-blue-600 mb-2">∞</div>
-        <div class="text-gray-600">Possibilities</div>
-      </div>
-      <div>
-        <div class="text-4xl font-bold text-indigo-600 mb-2">AI</div>
-        <div class="text-gray-600">Powered</div>
-      </div>
-    </div>
+<!-- CTA Row: All Poems -->
+<section class="py-10 bg-white">
+  <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+    <a href="/poems" class="inline-block bg-white text-purple-600 border-2 border-purple-600 px-8 py-3 rounded-lg font-semibold hover:bg-purple-50 transition-colors">
+      See all poems →
+    </a>
   </div>
-</section>
+  </section>
 
-<!-- Featured Poems -->
+<!-- How to Prompt -->
 <section class="py-16 bg-gray-50">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <h2 class="text-3xl font-bold text-center mb-12 text-gray-800">Featured Poems</h2>
-    
-    {#if poems.length > 0}
-      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {#each poems.slice(0, 6) as poem (poem.id)}
-          <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow">
-            <div class="mb-4">
-              <h3 class="text-xl font-semibold mb-2">
-                <a 
-                  href={getSubdomainUrl(poem.subdomain)}
-                  class="text-purple-600 hover:text-purple-800 transition-colors"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {poem.title}
-                </a>
-              </h3>
-              <div class="flex flex-wrap gap-2 mb-3">
-                {#if poem.style}
-                  <span class="inline-block bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded-full">
-                    {poem.style}
-                  </span>
-                {/if}
-                {#if poem.theme}
-                  <span class="inline-block bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">
-                    {poem.theme}
-                  </span>
-                {/if}
-              </div>
-            </div>
-            
-            <div class="font-serif text-gray-700 mb-4 text-center leading-relaxed">
-              {poem.content.length > 150 
-                ? poem.content.substring(0, 150) + '...'
-                : poem.content
-              }
-            </div>
-            
-            <div class="flex justify-between items-center text-sm text-gray-500">
-              <span>{formatDate(poem.created_at)}</span>
-              <span>{poem.views || 0} views</span>
-            </div>
-            
-            <div class="mt-4">
-              <a 
-                href={getSubdomainUrl(poem.subdomain)}
-                class="text-purple-600 hover:text-purple-800 text-sm font-medium"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Visit: {poem.subdomain}.mereautomaton.club →
-              </a>
-            </div>
-          </div>
-        {/each}
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <h2 class="text-2xl font-bold text-center mb-8 text-gray-800">How to prompt</h2>
+    <div class="grid md:grid-cols-3 gap-6 text-gray-700">
+      <div class="bg-white rounded-xl shadow p-6">
+        <h3 class="font-semibold mb-2">Keep it evocative</h3>
+        <p class="text-sm">Use strong imagery or emotions: "Midnight rain on empty streets".</p>
       </div>
-    {:else}
-      <div class="text-center py-12">
-        <div class="text-gray-500 mb-4">
-          <svg class="w-16 h-16 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-          </svg>
-        </div>
-        <h3 class="text-xl font-semibold text-gray-700 mb-2">No poems yet</h3>
-        <p class="text-gray-600 mb-6">Be the first to create a beautiful AI-generated poem!</p>
-        <button
-          on:click={() => document.querySelector('input').focus()}
-          class="bg-purple-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-purple-700 transition-colors"
-        >
-          Create the First Poem
-        </button>
+      <div class="bg-white rounded-xl shadow p-6">
+        <h3 class="font-semibold mb-2">Suggest a style</h3>
+        <p class="text-sm">Add styles like "haiku", "free verse", or "sonnet".</p>
       </div>
-    {/if}
-  </div>
-</section>
-
-<!-- How It Works -->
-<section class="py-16 bg-white">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <h2 class="text-3xl font-bold text-center mb-12 text-gray-800">How It Works</h2>
-    
-    <div class="grid md:grid-cols-3 gap-8">
-      <div class="text-center">
-        <div class="bg-purple-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-          <span class="text-2xl font-bold text-purple-600">1</span>
-        </div>
-        <h3 class="text-xl font-semibold mb-3">Enter a Title</h3>
-        <p class="text-gray-600">Give your poem a meaningful title that inspires the AI generation</p>
-      </div>
-      
-      <div class="text-center">
-        <div class="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-          <span class="text-2xl font-bold text-blue-600">2</span>
-        </div>
-        <h3 class="text-xl font-semibold mb-3">AI Generates</h3>
-        <p class="text-gray-600">Our AI analyzes your title and creates a unique poem tailored to your theme</p>
-      </div>
-      
-      <div class="text-center">
-        <div class="bg-indigo-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-          <span class="text-2xl font-bold text-indigo-600">3</span>
-        </div>
-        <h3 class="text-xl font-semibold mb-3">Get Your Domain</h3>
-        <p class="text-gray-600">Your poem gets its own subdomain that you can share with the world</p>
+      <div class="bg-white rounded-xl shadow p-6">
+        <h3 class="font-semibold mb-2">Add a theme</h3>
+        <p class="text-sm">Mention a theme: love, nature, technology, memory, time.</p>
       </div>
     </div>
   </div>
