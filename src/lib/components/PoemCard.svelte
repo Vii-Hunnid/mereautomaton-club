@@ -21,14 +21,10 @@
 
   /** @param {string} subdomain */
   function getSubdomainUrl(subdomain) {
-    if (typeof window !== 'undefined') {
-      const protocol = window.location.protocol
-      const domain = window.location.hostname.includes('localhost') 
-        ? `localhost:${window.location.port}`
-        : 'mereautomaton.club'
-      return `${protocol}//${subdomain}.${domain}`
-    }
-    return `https://${subdomain}.mereautomaton.club`
+    // Always generate absolute URLs to the subdomain
+    const host = `${subdomain}.mereautomaton.club`
+    const url = `https://${host}/`
+    return url
   }
 </script>
 
@@ -45,8 +41,7 @@
   <p class="font-serif text-gray-700 mb-4 leading-relaxed line-clamp-4">{poem.content}</p>
   <div class="flex justify-between items-center text-sm text-gray-500">
     <span>{formatDate(poem.created_at)}</span>
-    <a href={getSubdomainUrl(poem.subdomain)} class="text-purple-600 hover:text-purple-800">Visit →</a>
+    <a href={getSubdomainUrl(poem.subdomain)} class="text-purple-600 hover:text-purple-800" target="_blank" rel="noopener noreferrer">Visit →</a>
   </div>
 </div>
-
 

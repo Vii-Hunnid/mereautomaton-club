@@ -184,7 +184,9 @@
 
   async function copyUrl() {
     try {
-      const poemUrl = typeof window !== 'undefined' ? window.location.href : ''
+      // Generate the proper subdomain URL
+      const host = `${poem.subdomain}.mereautomaton.club`
+      const poemUrl = `https://${host}/`
       await navigator.clipboard.writeText(poemUrl)
       urlCopied = true
       setTimeout(() => {
@@ -318,7 +320,7 @@
 
         <!-- Create Your Own -->
         <a 
-          href="https://www.mereautomaton.club/" 
+          href="/" 
           class="flex items-center justify-center gap-2 bg-white text-purple-600 border-2 border-purple-600 px-6 py-3 rounded-xl font-semibold hover:bg-purple-50 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
         >
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
