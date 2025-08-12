@@ -25,7 +25,6 @@ export async function getAllPoems() {
     const { data, error } = await supabase
       .from('poems')
       .select('*')
-      .eq('is_public', true)
       .order('created_at', { ascending: false })
     
     if (error) {
@@ -46,7 +45,6 @@ export async function getPoemBySubdomain(subdomain) {
       .from('poems')
       .select('*')
       .eq('subdomain', subdomain)
-      .eq('is_public', true)
       .single()
     
     if (error) {
