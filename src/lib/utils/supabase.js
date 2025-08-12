@@ -1,6 +1,6 @@
 // src/lib/utils/supabase.js
 import { createClient } from '@supabase/supabase-js'
-import { browser } from '$app/environment'
+import { PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY } from '$env/static/public'
 
 // Use fallback values during build/development
 let supabaseUrl = 'https://placeholder.supabase.co'
@@ -18,6 +18,7 @@ try {
 }
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey)
+
 
 // Poem related functions
 export async function getAllPoems() {

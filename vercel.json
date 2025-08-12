@@ -1,0 +1,13 @@
+{
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/"
+    }
+  ],
+  "functions": {
+    "src/routes/[subdomain]/+page.server.js": {
+      "maxDuration": 10
+    }
+  }
+}
