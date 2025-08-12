@@ -1,10 +1,10 @@
 // src/lib/utils/supabase.js
 import { createClient } from '@supabase/supabase-js'
-import { VITE_PUBLIC_SUPABASE_URL, VITE_PUBLIC_SUPABASE_ANON_KEY } from '$env/static/public'
+import { PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY } from '$env/static/public'
 
 // Resolve env using SvelteKit public env (replaced at build time)
-const supabaseUrl = VITE_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co'
-const supabaseAnonKey = VITE_PUBLIC_SUPABASE_ANON_KEY || 'placeholder-key'
+const supabaseUrl = PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co'
+const supabaseAnonKey = PUBLIC_SUPABASE_ANON_KEY || 'placeholder-key'
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
