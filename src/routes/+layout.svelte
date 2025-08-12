@@ -6,7 +6,8 @@
   $: isSubdomain = typeof window !== 'undefined' && 
     $page.url.host !== 'mereautomaton.club' && 
     $page.url.host !== 'www.mereautomaton.club' &&
-    !$page.url.host.includes('localhost')
+    !$page.url.host.includes('localhost') &&
+    !$page.url.host.includes('vercel.app')
 </script>
 
 <svelte:head>
