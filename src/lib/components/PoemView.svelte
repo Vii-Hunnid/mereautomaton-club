@@ -18,34 +18,94 @@
   })
 
   async function downloadScreenshot() {
-    if (!poemElement) return
+    if (!poem) return
     
     isCapturing = true
     
     try {
-      // Load html2canvas from CDN
-      if (!window.html2canvas) {
-        const script = document.createElement('script')
-        script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js'
-        document.head.appendChild(script)
+      // Create a canvas element
+      const canvas = document.createElement('canvas')
+      const ctx = canvas.getContext('2d')
+      
+      // Set canvas size (Instagram post size)
+      const width = 1080
+      const height = 1080
+      canvas.width = width
+      canvas.height = height
+      
+      // Create gradient background
+      const gradient = ctx.createLinearGradient(0, 0, width, height)
+      gradient.addColorStop(0, '#faf5ff') // purple-50
+      gradient.addColorStop(0.5, '#eff6ff') // blue-50
+      gradient.addColorStop(1, '#eef2ff') // indigo-50
+      
+      ctx.fillStyle = gradient
+      ctx.fillRect(0, 0, width, height)
+      
+      // Add subtle decorative circles
+      ctx.globalAlpha = 0.1
+      ctx.fillStyle = '#8b5cf6' // purple-500
+      ctx.beginPath()
+      ctx.arc(200, 200, 120, 0, 2 * Math.PI)
+      ctx.fill()
+      
+      ctx.fillStyle = '#3b82f6' // blue-500
+      ctx.beginPath()
+      ctx.arc(width - 150, height - 150, 80, 0, 2 * Math.PI)
+      ctx.fill()
+      
+      ctx.globalAlpha = 1
+      
+      // Set up text styles
+      ctx.textAlign = 'center'
+      ctx.fillStyle = '#1f2937' // gray-800
+      
+      // Draw title
+      ctx.font = 'bold 48px "Playfair Display", serif'
+      const titleLines = wrapText(ctx, poem.title, width - 160, 60)
+      let yPosition = 180
+      
+      titleLines.forEach(line => {
+        ctx.fillText(line, width / 2, yPosition)
+        yPosition += 70
+      })
+      
+      yPosition += 40
+      
+      // Draw tags
+      if (poem.style || poem.theme) {
+        ctx.font = '20px "Inter", sans-serif'
+        ctx.fillStyle = '#6b7280' // gray-500
         
-        // Wait for script to load
-        await new Promise((resolve, reject) => {
-          script.onload = resolve
-          script.onerror = reject
-        })
+        const tags = []
+        if (poem.style) tags.push(poem.style)
+        if (poem.theme) tags.push(poem.theme)
+        
+        ctx.fillText(tags.join(' • '), width / 2, yPosition)
+        yPosition += 60
       }
       
-      // Create canvas of the poem section
-      const canvas = await window.html2canvas(poemElement, {
-        backgroundColor: '#ffffff',
-        scale: 2, // Higher resolution
-        useCORS: true,
-        allowTaint: false,
-        logging: false,
-        width: poemElement.offsetWidth,
-        height: poemElement.offsetHeight
+      // Draw poem content
+      ctx.font = '32px "Playfair Display", serif'
+      ctx.fillStyle = '#374151' // gray-700
+      
+      const contentLines = wrapText(ctx, poem.content, width - 200, 40)
+      const maxContentLines = Math.min(contentLines.length, 12) // Limit lines to fit
+      
+      contentLines.slice(0, maxContentLines).forEach(line => {
+        ctx.fillText(line, width / 2, yPosition)
+        yPosition += 50
       })
+      
+      // Add attribution at bottom
+      yPosition = height - 120
+      ctx.font = '24px "Inter", sans-serif'
+      ctx.fillStyle = '#8b5cf6' // purple-500
+      ctx.fillText('MereAutomaton.club', width / 2, yPosition)
+      
+      ctx.font = '18px "Inter", sans-serif'
+      ctx.fillStyle = '#9ca3af' // gray-400
+      ctx.fillText('AI-Generated Poetry', width / 2, yPosition + 35)
       
       // Convert to blob and download
       canvas.toBlob((blob) => {
@@ -53,7 +113,7 @@
           const url = URL.createObjectURL(blob)
           const a = document.createElement('a')
           a.href = url
-          a.download = `${poem.title.replace(/[^a-z0-9]/gi, '-').toLowerCase()}-poem.png`
+          a.download = `${poem.title.replace(/[^a-z0-9\s]/gi, '').replace(/\s+/g, '-').toLowerCase()}-poem.png`
           a.style.display = 'none'
           document.body.appendChild(a)
           a.click()
@@ -64,20 +124,30 @@
       
     } catch (err) {
       console.error('Screenshot failed:', err)
-      
-      // Fallback: Try using the browser's built-in screenshot API if available
-      try {
-        if ('getDisplayMedia' in navigator.mediaDevices) {
-          alert('Screenshot failed. Please use your browser\'s built-in screenshot tool (usually Ctrl+Shift+S or Cmd+Shift+4)')
-        } else {
-          alert('Screenshot not supported in this browser. Please take a manual screenshot.')
-        }
-      } catch {
-        alert('Screenshot failed. Please take a manual screenshot of the poem.')
-      }
+      alert('Failed to create image. Please try again or take a manual screenshot.')
     } finally {
       isCapturing = false
     }
+  }
+
+  // Helper function to wrap text
+  function wrapText(ctx, text, maxWidth, lineHeight) {
+    const words = text.split(' ')
+    const lines = []
+    let currentLine = words[0]
+
+    for (let i = 1; i < words.length; i++) {
+      const word = words[i]
+      const width = ctx.measureText(currentLine + ' ' + word).width
+      if (width < maxWidth) {
+        currentLine += ' ' + word
+      } else {
+        lines.push(currentLine)
+        currentLine = word
+      }
+    }
+    lines.push(currentLine)
+    return lines
   }
 
   async function sharePoem() {
