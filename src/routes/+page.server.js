@@ -5,7 +5,7 @@ import { error } from '@sveltejs/kit'
 export async function load({ locals }) {
   if (!locals.isSubdomain) {
     // Main domain: render your normal homepage
-    return { isSubdomain: true }
+    return { isSubdomain: true, poems: [] }
   }
 
   const poem = await getPoemBySubdomain(locals.subdomain)
