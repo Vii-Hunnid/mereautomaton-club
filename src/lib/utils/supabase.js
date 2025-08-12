@@ -1,21 +1,10 @@
 // src/lib/utils/supabase.js
 import { createClient } from '@supabase/supabase-js'
-import { browser } from '$app/environment'
+import { PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY } from '$env/static/public'
 
-// Use fallback values during build/development
-let supabaseUrl = 'https://placeholder.supabase.co'
-let supabaseAnonKey = 'placeholder-key'
-
-// Try to import environment variables, but handle gracefully if they don't exist
-try {
-  if (browser) {
-    // In browser, we can safely access these
-    supabaseUrl = import.meta.env.VITE_PUBLIC_SUPABASE_URL || supabaseUrl
-    supabaseAnonKey = import.meta.env.VITE_PUBLIC_SUPABASE_ANON_KEY || supabaseAnonKey
-  }
-} catch (error) {
-  console.warn('Environment variables not available, using placeholders')
-}
+// Use the same public env vars on both server and browser so SSR and client read the same project
+const supabaseUrl = PUBLIC_SUPABASE_URL
+const supabaseAnonKey = PUBLIC_SUPABASE_ANON_KEY
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
