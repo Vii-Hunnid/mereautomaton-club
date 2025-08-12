@@ -3,7 +3,7 @@
   import '../app.css'
   import { page } from '$app/stores'
   
-  export let data: { sponsor: any };
+  export let data;
 
   $: isSubdomain = typeof window !== 'undefined' && 
     $page.url.host !== 'mereautomaton.club' && 
@@ -59,6 +59,10 @@
       <h4 class="text-lg font-semibold">{data.sponsor.headline}</h4>
       <p class="text-sm">{data.sponsor.body}</p>
     </a>
+  {/if}
+
+  {#if data.sponsor?.image_url}
+    <img src={data.sponsor.image_url} alt="Sponsored" class="w-full rounded-xl mb-3" />
   {/if}
 
   <!-- Main Content -->
