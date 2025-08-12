@@ -39,7 +39,7 @@
           </div>
         {:else}
           <div class="flex items-center space-x-4">
-            <a href="/" class="text-gray-600 hover:text-purple-600 transition-colors">
+            <a href="https://www.mereautomaton.club/" class="text-gray-600 hover:text-purple-600 transition-colors">
               ← Back to Home
             </a>
           </div>

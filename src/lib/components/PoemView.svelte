@@ -318,7 +318,7 @@
 
         <!-- Create Your Own -->
         <a 
-          href="/" 
+          href="https://www.mereautomaton.club/" 
           class="flex items-center justify-center gap-2 bg-white text-purple-600 border-2 border-purple-600 px-6 py-3 rounded-xl font-semibold hover:bg-purple-50 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
         >
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
