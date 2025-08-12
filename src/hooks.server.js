@@ -3,7 +3,7 @@ export async function handle({ event, resolve }) {
   const host = event.request.headers.get('host') || ''
   const url = new URL(event.request.url)
   
-  console.log('=== REQUEST DEBUG ===')
+  console.log('=== HOOKS DEBUG ===')
   console.log('Host:', host)
   console.log('Original URL:', url.href)
   console.log('Pathname:', url.pathname)
@@ -44,9 +44,20 @@ export async function handle({ event, resolve }) {
     console.log('Not a subdomain request')
     event.locals.isSubdomain = false
     event.locals.subdomain = null
+    
+    // If someone tries to access /[subdomain] on main domain, block it
+    const pathSegments = url.pathname.split('/').filter(Boolean)
+    if (pathSegments.length === 1 && pathSegments[0].match(/^[a-z0-9-]+$/)) {
+      // This looks like a subdomain path on the main domain - block it
+      const potentialSubdomain = pathSegments[0]
+      if (potentialSubdomain !== 'poems' && potentialSubdomain !== 'create') {
+        console.log('Blocking subdomain-like path on main domain:', potentialSubdomain)
+        throw new Response('Not Found', { status: 404 })
+      }
+    }
   }
   
   const response = await resolve(event)
-  console.log('=== END REQUEST DEBUG ===')
+  console.log('=== END HOOKS DEBUG ===')
   return response
 }
