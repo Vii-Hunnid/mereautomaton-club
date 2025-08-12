@@ -1,5 +1,5 @@
 // src/routes/webhooks/payment/+server.ts
-import { supaAdmin } from '$lib/server/supa';
+import { supaAdmin } from '$lib/server/supabaseAdmin';
 import type { RequestHandler } from './$types';
 import crypto from 'crypto';
 

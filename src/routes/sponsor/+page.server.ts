@@ -1,5 +1,5 @@
 // src/routes/sponsor/+page.server.ts
-import { supaAdmin } from '$lib/server/supa';
+import { supaAdmin } from '$lib/server/supabaseAdmin';
 import { fail, redirect } from '@sveltejs/kit';
 
 function todaySA(): string {

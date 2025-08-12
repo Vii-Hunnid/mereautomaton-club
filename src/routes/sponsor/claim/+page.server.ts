@@ -1,5 +1,5 @@
 // src/routes/sponsor/claim/+page.server.ts (sketch)
-import { supaAdmin } from '$lib/server/supa';
+import { supaAdmin } from '$lib/server/supabaseAdmin';
 import { fail } from '@sveltejs/kit';
 
 export const actions = {

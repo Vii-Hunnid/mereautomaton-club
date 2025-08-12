@@ -1,5 +1,5 @@
 // src/routes/sponsor/click/+server.ts
-import { supaAdmin } from '$lib/server/supa';
+import { supaAdmin } from '$lib/server/supabaseAdmin';
 import { redirect } from '@sveltejs/kit';
 
 export const GET = async ({ url }) => {
