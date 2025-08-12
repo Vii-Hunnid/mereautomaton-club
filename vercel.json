@@ -1,13 +1,28 @@
 {
-  "rewrites": [
-    {
-      "source": "/(.*)",
-      "destination": "/"
-    }
-  ],
+  "buildCommand": "npm run build",
+  "framework": "sveltekit",
+  "regions": ["iad1"],
   "functions": {
-    "src/routes/[subdomain]/+page.server.js": {
+    "src/routes/**/*.server.js": {
+      "maxDuration": 10
+    },
+    "src/routes/**/+page.server.js": {
       "maxDuration": 10
     }
-  }
+  },
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        }
+      ]
+    }
+  ]
 }
