@@ -83,20 +83,20 @@
       ctx.fillStyle = '#1f2937' // gray-800
       
       // Draw title
-      ctx.font = 'bold 48px "Playfair Display", serif'
+      ctx.font = 'bold 44px "Playfair Display", serif'
       const titleLines = wrapText(ctx, poem.title, width - 160, 60)
-      let yPosition = 180
+      let yPosition = 120
       
       titleLines.forEach(line => {
         ctx.fillText(line, width / 2, yPosition)
-        yPosition += 70
+        yPosition += 60
       })
       
-      yPosition += 40
+      yPosition += 30
       
       // Draw tags
       if (poem.style || poem.theme) {
-        ctx.font = '20px "Inter", sans-serif'
+        ctx.font = '18px "Inter", sans-serif'
         ctx.fillStyle = '#6b7280' // gray-500
         
         const tags = []
@@ -104,20 +104,12 @@
         if (poem.theme) tags.push(poem.theme)
         
         ctx.fillText(tags.join(' • '), width / 2, yPosition)
-        yPosition += 60
+        yPosition += 50
       }
       
-      // Draw poem content
-      ctx.font = '32px "Playfair Display", serif'
-      ctx.fillStyle = '#374151' // gray-700
-      
-      const contentLines = wrapText(ctx, poem.content, width - 200, 40)
-      const maxContentLines = Math.min(contentLines.length, 12) // Limit lines to fit
-      
-      contentLines.slice(0, maxContentLines).forEach(line => {
-        ctx.fillText(line, width / 2, yPosition)
-        yPosition += 50
-      })
+      // Format and draw poem content based on style
+      const formattedContent = formatPoemForDisplay(poem.content, poem.style)
+      drawFormattedPoem(ctx, formattedContent, width, yPosition, poem.style)
       
       // Add attribution at bottom
       yPosition = height - 120
@@ -152,24 +144,194 @@
     }
   }
 
-  // Helper function to wrap text
+  // Enhanced text wrapping function
   function wrapText(ctx, text, maxWidth, lineHeight) {
     const words = text.split(' ')
     const lines = []
-    let currentLine = words[0]
+    let currentLine = words[0] || ''
 
     for (let i = 1; i < words.length; i++) {
       const word = words[i]
-      const width = ctx.measureText(currentLine + ' ' + word).width
+      const testLine = currentLine + ' ' + word
+      const width = ctx.measureText(testLine).width
       if (width < maxWidth) {
-        currentLine += ' ' + word
+        currentLine = testLine
       } else {
         lines.push(currentLine)
         currentLine = word
       }
     }
-    lines.push(currentLine)
+    if (currentLine) {
+      lines.push(currentLine)
+    }
     return lines
+  }
+
+  // Format poem content based on poetry style
+  function formatPoemForDisplay(content, style) {
+    const lines = content.split('\n').filter(line => line.trim())
+    const styleType = (style || '').toLowerCase()
+    
+    return {
+      lines,
+      styleType,
+      formatting: getPoemFormatting(styleType)
+    }
+  }
+
+  // Get formatting rules for different poetry styles
+  function getPoemFormatting(styleType) {
+    const formats = {
+      'haiku': {
+        lineSpacing: 45,
+        fontSize: 32,
+        alignment: 'center',
+        stanzaBreak: 15,
+        maxWidth: 600
+      },
+      'sonnet': {
+        lineSpacing: 35,
+        fontSize: 26,
+        alignment: 'center',
+        stanzaBreak: 20,
+        maxWidth: 700,
+        stanzaPattern: [4, 4, 4, 2] // Traditional sonnet structure
+      },
+      'limerick': {
+        lineSpacing: 38,
+        fontSize: 28,
+        alignment: 'center',
+        stanzaBreak: 15,
+        maxWidth: 650,
+        indentPattern: [0, 20, 20, 20, 0] // AABBA rhyme scheme indentation
+      },
+      'ballad': {
+        lineSpacing: 32,
+        fontSize: 28,
+        alignment: 'center',
+        stanzaBreak: 25,
+        maxWidth: 750,
+        stanzaPattern: [4] // 4-line stanzas
+      },
+      'acrostic': {
+        lineSpacing: 35,
+        fontSize: 28,
+        alignment: 'left',
+        stanzaBreak: 10,
+        maxWidth: 700,
+        highlightFirstLetter: true
+      },
+      'free verse': {
+        lineSpacing: 38,
+        fontSize: 30,
+        alignment: 'center',
+        stanzaBreak: 20,
+        maxWidth: 800,
+        preserveSpacing: true
+      }
+    }
+    
+    return formats[styleType] || formats['free verse']
+  }
+
+  // Draw formatted poem with proper structure
+  function drawFormattedPoem(ctx, formattedContent, canvasWidth, startY, style) {
+    const { lines, styleType, formatting } = formattedContent
+    const { lineSpacing, fontSize, alignment, stanzaBreak, maxWidth, stanzaPattern, indentPattern, highlightFirstLetter } = formatting
+    
+    ctx.font = `${fontSize}px "Playfair Display", serif`
+    ctx.fillStyle = '#374151' // gray-700
+    
+    let yPosition = startY
+    let lineIndex = 0
+    let stanzaLineCount = 0
+    let currentStanzaIndex = 0
+    
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i].trim()
+      if (!line) {
+        // Empty line - add stanza break
+        yPosition += stanzaBreak
+        stanzaLineCount = 0
+        continue
+      }
+      
+      // Calculate indentation for specific styles
+      let indent = 0
+      if (indentPattern && lineIndex < indentPattern.length) {
+        indent = indentPattern[lineIndex % indentPattern.length]
+      }
+      
+      // Handle text alignment and positioning
+      let xPosition = canvasWidth / 2
+      if (alignment === 'left') {
+        ctx.textAlign = 'left'
+        xPosition = (canvasWidth - maxWidth) / 2 + indent
+      } else {
+        ctx.textAlign = 'center'
+        xPosition = canvasWidth / 2 + indent
+      }
+      
+      // Special handling for acrostic - highlight first letter
+      if (highlightFirstLetter && line.length > 0) {
+        const firstLetter = line[0]
+        const restOfLine = line.substring(1)
+        
+        // Draw first letter in bold/colored
+        ctx.font = `bold ${fontSize}px "Playfair Display", serif`
+        ctx.fillStyle = '#8b5cf6' // purple-500
+        
+        if (alignment === 'left') {
+          ctx.fillText(firstLetter, xPosition, yPosition)
+          const letterWidth = ctx.measureText(firstLetter).width
+          
+          // Draw rest of line
+          ctx.font = `${fontSize}px "Playfair Display", serif`
+          ctx.fillStyle = '#374151' // gray-700
+          ctx.fillText(restOfLine, xPosition + letterWidth, yPosition)
+        } else {
+          // For center alignment, we need to calculate total width
+          ctx.font = `${fontSize}px "Playfair Display", serif`
+          const totalWidth = ctx.measureText(line).width
+          const startX = xPosition - totalWidth / 2
+          
+          ctx.font = `bold ${fontSize}px "Playfair Display", serif`
+          ctx.fillStyle = '#8b5cf6'
+          ctx.fillText(firstLetter, startX, yPosition)
+          
+          const letterWidth = ctx.measureText(firstLetter).width
+          ctx.font = `${fontSize}px "Playfair Display", serif`
+          ctx.fillStyle = '#374151'
+          ctx.fillText(restOfLine, startX + letterWidth, yPosition)
+        }
+      } else {
+        // Normal line drawing
+        ctx.font = `${fontSize}px "Playfair Display", serif`
+        ctx.fillStyle = '#374151'
+        
+        // Handle long lines by wrapping them
+        const wrappedLines = wrapText(ctx, line, maxWidth, lineSpacing)
+        for (const wrappedLine of wrappedLines) {
+          ctx.fillText(wrappedLine, xPosition, yPosition)
+          yPosition += lineSpacing
+        }
+        yPosition -= lineSpacing // Adjust because we'll add it back below
+      }
+      
+      yPosition += lineSpacing
+      stanzaLineCount++
+      lineIndex++
+      
+      // Add stanza breaks based on pattern
+      if (stanzaPattern && stanzaLineCount >= stanzaPattern[currentStanzaIndex % stanzaPattern.length]) {
+        yPosition += stanzaBreak
+        stanzaLineCount = 0
+        currentStanzaIndex++
+      }
+      
+      // Prevent overflow
+      if (yPosition > 900) break
+    }
   }
 
   async function sharePoem() {
@@ -227,6 +389,113 @@
       day: 'numeric'
     })
   }
+
+  /**
+   * Format poem content for HTML display based on poetry style
+   */
+  function formatPoemHTML(content, style) {
+    const lines = content.split('\n').filter(line => line.trim())
+    const styleType = (style || '').toLowerCase()
+    
+    // Apply specific formatting based on poetry style
+    switch (styleType) {
+      case 'haiku':
+        return formatHaiku(lines)
+      case 'sonnet':
+        return formatSonnet(lines)
+      case 'limerick':
+        return formatLimerick(lines)
+      case 'acrostic':
+        return formatAcrostic(lines)
+      case 'ballad':
+        return formatBallad(lines)
+      default:
+        return formatFreeVerse(lines)
+    }
+  }
+
+  function formatHaiku(lines) {
+    return `<div class="text-center space-y-2">${lines.map(line => 
+      `<div class="text-2xl leading-relaxed">${line.trim()}</div>`
+    ).join('')}</div>`
+  }
+
+  function formatSonnet(lines) {
+    // Traditional sonnet: 3 quatrains + 1 couplet
+    let html = '<div class="text-center space-y-6">'
+    let lineIndex = 0
+    
+    // First three quatrains (4 lines each)
+    for (let q = 0; q < 3 && lineIndex < lines.length; q++) {
+      html += '<div class="space-y-1">'
+      for (let i = 0; i < 4 && lineIndex < lines.length; i++) {
+        html += `<div class="leading-relaxed">${lines[lineIndex].trim()}</div>`
+        lineIndex++
+      }
+      html += '</div>'
+    }
+    
+    // Final couplet
+    if (lineIndex < lines.length) {
+      html += '<div class="space-y-1 mt-4">'
+      while (lineIndex < lines.length) {
+        html += `<div class="leading-relaxed font-semibold">${lines[lineIndex].trim()}</div>`
+        lineIndex++
+      }
+      html += '</div>'
+    }
+    
+    html += '</div>'
+    return html
+  }
+
+  function formatLimerick(lines) {
+    // AABBA rhyme scheme with specific indentation
+    const indentPattern = ['', 'ml-4', 'ml-4', 'ml-4', '']
+    
+    return `<div class="text-center space-y-2">${lines.map((line, index) => 
+      `<div class="leading-relaxed ${indentPattern[index % indentPattern.length]}">${line.trim()}</div>`
+    ).join('')}</div>`
+  }
+
+  function formatAcrostic(lines) {
+    return `<div class="text-left space-y-2 max-w-2xl mx-auto">${lines.map(line => {
+      const trimmed = line.trim()
+      if (trimmed.length > 0) {
+        const firstLetter = trimmed[0]
+        const rest = trimmed.substring(1)
+        return `<div class="leading-relaxed">
+          <span class="text-purple-600 font-bold text-3xl">${firstLetter}</span><span class="text-2xl">${rest}</span>
+        </div>`
+      }
+      return `<div class="leading-relaxed">${trimmed}</div>`
+    }).join('')}</div>`
+  }
+
+  function formatBallad(lines) {
+    // Group into 4-line stanzas
+    let html = '<div class="text-center space-y-6">'
+    for (let i = 0; i < lines.length; i += 4) {
+      html += '<div class="space-y-1">'
+      for (let j = 0; j < 4 && i + j < lines.length; j++) {
+        html += `<div class="leading-relaxed">${lines[i + j].trim()}</div>`
+      }
+      html += '</div>'
+    }
+    html += '</div>'
+    return html
+  }
+
+  function formatFreeVerse(lines) {
+    // Preserve original line breaks and spacing
+    return `<div class="text-center space-y-3">${lines.map(line => {
+      const trimmed = line.trim()
+      if (trimmed === '') {
+        return '<div class="h-4"></div>' // Empty line spacing
+      }
+      return `<div class="leading-relaxed">${trimmed}</div>`
+    }).join('')}</div>`
+  }
 </script>
 
 <div class="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-50">
@@ -256,9 +525,9 @@
           <!-- Title -->
           <h1 class="text-4xl md:text-6xl font-bold font-serif mb-12 text-gray-800 leading-tight">{poem.title}</h1>
 
-          <!-- Poem Content -->
-          <div class="font-serif text-xl md:text-2xl text-gray-700 leading-relaxed whitespace-pre-line max-w-3xl mx-auto">
-            {poem.content}
+          <!-- Poem Content with Proper Formatting -->
+          <div class="font-serif text-xl md:text-2xl text-gray-700 leading-relaxed max-w-3xl mx-auto">
+            {@html formatPoemHTML(poem.content, poem.style)}
           </div>
 
           <!-- Metadata -->
