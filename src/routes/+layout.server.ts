@@ -1,5 +1,5 @@
 // src/routes/+layout.server.ts
-import { supaAdmin } from '$lib/server/supa';
+import { supabaseAdmin } from '$lib/server/supabaseAdmin';
 
 function todaySA(): string {
   const now = new Date(
@@ -9,7 +9,7 @@ function todaySA(): string {
 }
 
 export const load = async ({ locals, url }) => {
-  const { data: s } = await supaAdmin
+  const { data: s } = await supabaseAdmin
     .from('sponsor_slots')
     .select('*')
     .eq('date', todaySA())
@@ -18,7 +18,7 @@ export const load = async ({ locals, url }) => {
 
   // Count an impression once per page view
   if (s) {
-    await supaAdmin.rpc('inc_sponsor_impressions', { slot_id: s.id });
+    await supabaseAdmin.rpc('inc_sponsor_impressions', { slot_id: s.id });
   }
   return { sponsor: s ?? null };
 };
