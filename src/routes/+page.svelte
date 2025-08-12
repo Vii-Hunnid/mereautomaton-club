@@ -91,22 +91,22 @@
     <!-- Enhanced Poem Title Input -->
     <div class="max-w-3xl mx-auto mb-8 sm:mb-12">
       <div class="space-y-4 sm:space-y-0 sm:flex sm:gap-4">
-        <!-- Input with better mobile styling -->
+        <!-- Input with better mobile styling and high contrast -->
         <div class="flex-1">
           <input
             bind:value={newPoemTitle}
             on:keypress={handleKeyPress}
             placeholder={isMobile ? "e.g., 'Midnight Dreams'" : "Enter your poem title (e.g., 'Midnight Dreams')"}
-            class="w-full px-4 sm:px-6 py-4 sm:py-4 text-base sm:text-lg rounded-xl text-gray-800 border-0 focus:ring-4 focus:ring-white/30 focus:outline-none shadow-lg placeholder-gray-500 transition-all duration-300 hover:shadow-xl"
+            class="w-full px-4 sm:px-6 py-4 sm:py-5 text-base sm:text-lg rounded-xl text-gray-900 bg-white border-2 border-white/20 focus:border-white focus:ring-4 focus:ring-white/30 focus:outline-none shadow-xl placeholder-gray-500 transition-all duration-300 hover:shadow-2xl font-medium"
             disabled={isGenerating}
           />
         </div>
         
-        <!-- Enhanced button with better mobile visibility -->
+        <!-- Enhanced button with high contrast -->
         <button
           on:click={createNewPoem}
           disabled={!newPoemTitle.trim() || isGenerating}
-          class="w-full sm:w-auto bg-white text-purple-700 px-6 sm:px-8 py-4 sm:py-4 rounded-xl font-bold text-base sm:text-lg hover:bg-gray-50 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 min-w-[160px] border-2 border-transparent hover:border-purple-200"
+          class="w-full sm:w-auto bg-white text-purple-700 px-6 sm:px-8 py-4 sm:py-5 rounded-xl font-bold text-base sm:text-lg hover:bg-gray-50 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-xl hover:shadow-2xl transform hover:-translate-y-0.5 min-w-[160px] border-2 border-white/20 hover:border-white"
         >
           {#if isGenerating}
             <div class="flex items-center justify-center">
@@ -119,7 +119,7 @@
           {:else}
             <div class="flex items-center justify-center">
               <span>Create Poem</span>
-              <svg class="w-5 h-5 ml-2 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="w-5 h-5 ml-2 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
               </svg>
             </div>
@@ -127,12 +127,16 @@
         </button>
       </div>
       
-      <!-- Enhanced preview text -->
+      <!-- Enhanced preview text with better contrast -->
       <div class="mt-4 sm:mt-6">
-        <p class="text-xs sm:text-sm opacity-90 bg-white/10 rounded-lg px-4 py-2 backdrop-blur-sm border border-white/20">
-          <span class="font-medium">Your poem will be available at:</span>
-          <span class="font-mono text-blue-200 block sm:inline mt-1 sm:mt-0 sm:ml-2">[title].mereautomaton.club</span>
-        </p>
+        <div class="bg-white/20 backdrop-blur-sm rounded-xl px-4 sm:px-6 py-3 sm:py-4 border border-white/30">
+          <p class="text-sm sm:text-base text-white font-medium">
+            <span class="opacity-90">Your poem will be available at:</span>
+          </p>
+          <p class="font-mono text-blue-100 text-base sm:text-lg font-semibold mt-1">
+            [title].mereautomaton.club
+          </p>
+        </div>
       </div>
     </div>
     
