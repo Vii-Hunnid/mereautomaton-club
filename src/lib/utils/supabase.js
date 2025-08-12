@@ -1,13 +1,10 @@
 // src/lib/utils/supabase.js
 import { createClient } from '@supabase/supabase-js'
-import { browser } from '$app/environment'
-import { env as publicEnv } from '$env/dynamic/public'
+import { VITE_PUBLIC_SUPABASE_URL, VITE_PUBLIC_SUPABASE_ANON_KEY } from '$env/static/public'
 
-// Resolve env in both server and browser
-const supabaseUrl =
-  publicEnv.PUBLIC_SUPABASE_URL || (typeof import !== 'undefined' && import.meta?.env?.VITE_PUBLIC_SUPABASE_URL) || 'https://placeholder.supabase.co'
-const supabaseAnonKey =
-  publicEnv.PUBLIC_SUPABASE_ANON_KEY || (typeof import !== 'undefined' && import.meta?.env?.VITE_PUBLIC_SUPABASE_ANON_KEY) || 'placeholder-key'
+// Resolve env using SvelteKit public env (replaced at build time)
+const supabaseUrl = VITE_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co'
+const supabaseAnonKey = VITE_PUBLIC_SUPABASE_ANON_KEY || 'placeholder-key'
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
@@ -31,6 +28,7 @@ export async function getAllPoems() {
   }
 }
 
+/** @param {string} subdomain */
 export async function getPoemBySubdomain(subdomain) {
   try {
     const { data, error } = await supabase
@@ -52,6 +50,7 @@ export async function getPoemBySubdomain(subdomain) {
   }
 }
 
+/** @param {Record<string, any>} poemData */
 export async function createPoem(poemData) {
   try {
     const { data, error } = await supabase
@@ -72,6 +71,7 @@ export async function createPoem(poemData) {
   }
 }
 
+/** @param {Record<string, any>} subdomainData */
 export async function createSubdomain(subdomainData) {
   try {
     const { data, error } = await supabase
@@ -92,6 +92,7 @@ export async function createSubdomain(subdomainData) {
   }
 }
 
+/** @param {string} subdomain */
 export async function checkSubdomainExists(subdomain) {
   try {
     const { data, error } = await supabase
@@ -107,6 +108,7 @@ export async function checkSubdomainExists(subdomain) {
   }
 }
 
+/** @param {string} poemId */
 export async function incrementViews(poemId) {
   try {
     const { error } = await supabase
