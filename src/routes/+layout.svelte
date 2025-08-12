@@ -56,37 +56,10 @@
   {#if !isSubdomain}
     <footer class="bg-gray-800 text-white py-12 mt-20">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="grid md:grid-cols-4 gap-8">
+        <div class="mt-8">
           <div>
             <h4 class="text-lg font-semibold mb-4">MereAutomaton.club</h4>
             <p class="text-gray-400">Bridging the gap between artificial intelligence and human creativity through poetry.</p>
-          </div>
-          <div>
-            <h4 class="text-lg font-semibold mb-4">Features</h4>
-            <ul class="space-y-2 text-gray-400">
-              <li>AI Poetry Generation</li>
-              <li>Custom Subdomains</li>
-              <li>Community Sharing</li>
-              <li>Multiple Styles</li>
-            </ul>
-          </div>
-          <div>
-            <h4 class="text-lg font-semibold mb-4">Community</h4>
-            <ul class="space-y-2 text-gray-400">
-              <li>Featured Poets</li>
-              <li>Writing Prompts</li>
-              <li>Poetry Challenges</li>
-              <li>Discussion Forums</li>
-            </ul>
-          </div>
-          <div>
-            <h4 class="text-lg font-semibold mb-4">Connect</h4>
-            <ul class="space-y-2 text-gray-400">
-              <li>Newsletter</li>
-              <li>Twitter</li>
-              <li>Discord</li>
-              <li>GitHub</li>
-            </ul>
           </div>
         </div>
         <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">

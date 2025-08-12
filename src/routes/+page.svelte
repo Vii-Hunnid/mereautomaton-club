@@ -3,6 +3,7 @@
   import { onMount } from 'svelte'
   import { goto } from '$app/navigation'
   import { generateSlug } from '$lib/utils/ai.js'
+  import PoemCard from '$lib/components/PoemCard.svelte'
   
   export let data
   
@@ -99,37 +100,46 @@
   </div>
 </section>
 
+<!-- Recent Poems Section -->
+{#if poems.length > 0}
+  <section class="py-16 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="text-3xl font-bold text-center mb-12 text-gray-800">Recent Poems</h2>
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {#each poems.slice(0, 6) as poem (poem.id)}
+          <PoemCard {poem} />
+        {/each}
+      </div>
+    </div>
+  </section>
+{/if}
+
 <!-- CTA Row: All Poems -->
-<section class="py-10 bg-white">
+<section class="py-10 bg-gray-50">
   <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-    <a href="/poems" class="inline-block bg-white text-purple-600 border-2 border-purple-600 px-8 py-3 rounded-lg font-semibold hover:bg-purple-50 transition-colors">
+    <a href="/poems" class="inline-block bg-purple-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-purple-700 transition-colors">
       See all poems →
     </a>
   </div>
-  </section>
+</section>
 
 <!-- How to Prompt -->
-<section class="py-16 bg-gray-50">
+<section class="py-16 bg-white">
   <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
     <h2 class="text-2xl font-bold text-center mb-8 text-gray-800">How to prompt</h2>
     <div class="grid md:grid-cols-3 gap-6 text-gray-700">
-      <div class="bg-white rounded-xl shadow p-6">
+      <div class="bg-gray-50 rounded-xl shadow p-6">
         <h3 class="font-semibold mb-2">Keep it evocative</h3>
         <p class="text-sm">Use strong imagery or emotions: "Midnight rain on empty streets".</p>
       </div>
-      <div class="bg-white rounded-xl shadow p-6">
+      <div class="bg-gray-50 rounded-xl shadow p-6">
         <h3 class="font-semibold mb-2">Suggest a style</h3>
         <p class="text-sm">Add styles like "haiku", "free verse", or "sonnet".</p>
       </div>
-      <div class="bg-white rounded-xl shadow p-6">
+      <div class="bg-gray-50 rounded-xl shadow p-6">
         <h3 class="font-semibold mb-2">Add a theme</h3>
         <p class="text-sm">Mention a theme: love, nature, technology, memory, time.</p>
       </div>
     </div>
   </div>
 </section>
-
-
-
-<!-- <h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://svelte.dev/docs/kit">svelte.dev/docs/kit</a> to read the documentation</p> -->
