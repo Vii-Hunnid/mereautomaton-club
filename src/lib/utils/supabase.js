@@ -105,13 +105,35 @@ export async function checkSubdomainExists(subdomain) {
 
 export async function incrementViews(poemId) {
   try {
-    const { error } = await supabase
+    console.log('Attempting to increment views for poem:', poemId)
+    
+    // First, try to use the RPC function
+    const { data, error } = await supabase
       .rpc('increment_views', { poem_id: poemId })
     
     if (error) {
-      console.error('Error incrementing views:', error)
+      console.warn('RPC increment_views failed, trying direct update:', error)
+      
+      // Fallback: direct update
+      const { data: updateData, error: updateError } = await supabase
+        .from('poems')
+        .update({ views: supabase.raw('COALESCE(views, 0) + 1') })
+        .eq('id', poemId)
+        .select('views')
+      
+      if (updateError) {
+        console.error('Direct update also failed:', updateError)
+        throw updateError
+      }
+      
+      console.log('Views incremented via direct update:', updateData)
+      return updateData
     }
+    
+    console.log('Views incremented via RPC:', data)
+    return data
   } catch (error) {
     console.error('Error incrementing views:', error)
+    throw error
   }
 }

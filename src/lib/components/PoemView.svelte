@@ -11,9 +11,31 @@
 
   onMount(() => {
     if (poem && poem.id) {
-      fetch(`/api/poems/${poem.id}/view`, { method: 'POST' }).catch((err) =>
+      console.log('Incrementing view for poem:', poem.id)
+      fetch(`/api/poems/${poem.id}/view`, { 
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`)
+        }
+        return response.json()
+      })
+      .then(data => {
+        if (data.success) {
+          console.log('View count incremented successfully')
+        } else {
+          console.error('Failed to increment view count:', data.error)
+        }
+      })
+      .catch((err) => {
         console.error('Failed to increment view count:', err)
-      )
+      })
+    } else {
+      console.warn('No poem ID available for view counting')
     }
   })
 
