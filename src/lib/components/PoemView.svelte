@@ -23,36 +23,58 @@
     isCapturing = true
     
     try {
-      // Dynamically import html2canvas
-      const html2canvas = (await import('https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js')).default
+      // Load html2canvas from CDN
+      if (!window.html2canvas) {
+        const script = document.createElement('script')
+        script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js'
+        document.head.appendChild(script)
+        
+        // Wait for script to load
+        await new Promise((resolve, reject) => {
+          script.onload = resolve
+          script.onerror = reject
+        })
+      }
       
       // Create canvas of the poem section
-      const canvas = await html2canvas(poemElement, {
+      const canvas = await window.html2canvas(poemElement, {
         backgroundColor: '#ffffff',
         scale: 2, // Higher resolution
         useCORS: true,
-        allowTaint: true,
-        height: poemElement.offsetHeight,
+        allowTaint: false,
+        logging: false,
         width: poemElement.offsetWidth,
-        scrollX: 0,
-        scrollY: 0
+        height: poemElement.offsetHeight
       })
       
       // Convert to blob and download
       canvas.toBlob((blob) => {
-        const url = URL.createObjectURL(blob)
-        const a = document.createElement('a')
-        a.href = url
-        a.download = `${poem.title.replace(/[^a-z0-9]/gi, '-').toLowerCase()}-poem.png`
-        document.body.appendChild(a)
-        a.click()
-        document.body.removeChild(a)
-        URL.revokeObjectURL(url)
-      }, 'image/png', 1.0)
+        if (blob) {
+          const url = URL.createObjectURL(blob)
+          const a = document.createElement('a')
+          a.href = url
+          a.download = `${poem.title.replace(/[^a-z0-9]/gi, '-').toLowerCase()}-poem.png`
+          a.style.display = 'none'
+          document.body.appendChild(a)
+          a.click()
+          document.body.removeChild(a)
+          URL.revokeObjectURL(url)
+        }
+      }, 'image/png', 0.95)
       
     } catch (err) {
       console.error('Screenshot failed:', err)
-      alert('Failed to create screenshot. Please try again.')
+      
+      // Fallback: Try using the browser's built-in screenshot API if available
+      try {
+        if ('getDisplayMedia' in navigator.mediaDevices) {
+          alert('Screenshot failed. Please use your browser\'s built-in screenshot tool (usually Ctrl+Shift+S or Cmd+Shift+4)')
+        } else {
+          alert('Screenshot not supported in this browser. Please take a manual screenshot.')
+        }
+      } catch {
+        alert('Screenshot failed. Please take a manual screenshot of the poem.')
+      }
     } finally {
       isCapturing = false
     }
@@ -226,7 +248,7 @@
 
         <!-- Create Your Own -->
         <a 
-          href="https://www.mereautomaton.club/" 
+          href="/" 
           class="flex items-center justify-center gap-2 bg-white text-purple-600 border-2 border-purple-600 px-6 py-3 rounded-xl font-semibold hover:bg-purple-50 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
         >
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

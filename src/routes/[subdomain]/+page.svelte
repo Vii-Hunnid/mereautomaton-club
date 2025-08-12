@@ -45,7 +45,7 @@
       
       <div class="space-y-4">
         <a
-          href="/"
+          href="https://www.mereautomaton.club/"
           class="block bg-purple-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-purple-700 transition-colors"
         >
           Go to Homepage
