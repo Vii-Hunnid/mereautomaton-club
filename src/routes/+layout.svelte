@@ -3,6 +3,8 @@
   import '../app.css'
   import { page } from '$app/stores'
   
+  export let data: { sponsor: any };
+
   $: isSubdomain = typeof window !== 'undefined' && 
     $page.url.host !== 'mereautomaton.club' && 
     $page.url.host !== 'www.mereautomaton.club' &&
@@ -47,6 +49,17 @@
       </div>
     </div>
   </nav>
+
+  {#if data.sponsor}
+    <a
+      class="block mx-auto my-6 max-w-3xl rounded-2xl border p-4 no-underline"
+      href={`/sponsor/click?slot=${data.sponsor.id}`}
+    >
+      <span class="text-xs opacity-60">Sponsored</span>
+      <h4 class="text-lg font-semibold">{data.sponsor.headline}</h4>
+      <p class="text-sm">{data.sponsor.body}</p>
+    </a>
+  {/if}
 
   <!-- Main Content -->
   <main>
