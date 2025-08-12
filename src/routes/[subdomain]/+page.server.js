@@ -1,25 +1,25 @@
 // src/routes/[subdomain]/+page.server.js
 import { getPoemBySubdomain } from '$lib/utils/supabase.js'
-import { error, redirect } from '@sveltejs/kit'
+import { error } from '@sveltejs/kit'
 
 export async function load({ params, url, request }) {
   const { subdomain } = params
   const host = request.headers.get('host') || ''
   
-  console.log('Subdomain route hit:', { subdomain, host, url: url.pathname })
+  console.log('=== SUBDOMAIN ROUTE DEBUG ===')
+  console.log('Params subdomain:', subdomain)
+  console.log('Host:', host)
+  console.log('URL pathname:', url.pathname)
+  console.log('Full URL:', url.href)
   
-  // If this is actually the main domain, redirect to home
-  if (host === 'mereautomaton.club' || host === 'www.mereautomaton.club') {
-    throw redirect(302, '/')
-  }
-  
-  // Skip certain reserved subdomains
-  if (subdomain === 'www' || subdomain === 'api' || subdomain === 'admin') {
+  // Skip if this is the main domain or www
+  if (subdomain === 'mereautomaton' || subdomain === 'www') {
+    console.log('Skipping main domain')
     throw error(404, 'Not found')
   }
   
   try {
-    console.log('Looking for poem with subdomain:', subdomain)
+    console.log('Fetching poem for subdomain:', subdomain)
     const poem = await getPoemBySubdomain(subdomain)
     
     if (!poem) {
@@ -28,6 +28,8 @@ export async function load({ params, url, request }) {
     }
     
     console.log('Found poem:', poem.title)
+    console.log('=== END SUBDOMAIN ROUTE DEBUG ===')
+    
     return {
       poem,
       subdomain,
